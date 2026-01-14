@@ -6,19 +6,26 @@ export default async function handler(req, res) {
   }
 
   try {
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error("GROQ_API_KEY missing");
+    }
+
     const groq = new Groq({
       apiKey: process.env.GROQ_API_KEY,
     });
 
-    const userMessage = req.body?.message || "";
+    const userMessage = req.body?.message;
+    if (!userMessage) {
+      return res.status(400).json({ error: "Message required" });
+    }
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "llama3-70b-8192",
       messages: [
         {
           role: "system",
           content:
-            "You are Paw-Doctor AI, a kind canine health assistant. Always be calm, friendly, and give dog-care advice with a safety disclaimer."
+            "You are Paw-Doctor AI, a calm and friendly dog-care assistant. Always add a short safety disclaimer."
         },
         {
           role: "user",
@@ -29,14 +36,14 @@ export default async function handler(req, res) {
       max_completion_tokens: 512,
     });
 
-    const reply = completion.choices[0].message.content;
-
-    return res.status(200).json({ reply });
+    return res.status(200).json({
+      reply: completion.choices[0].message.content
+    });
 
   } catch (err) {
-    console.error("Groq error:", err);
+    console.error("SERVER ERROR:", err);
     return res.status(500).json({
-      error: "AI failed",
+      error: "Server crashed",
       details: err.message
     });
   }
