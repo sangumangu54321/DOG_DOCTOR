@@ -143,7 +143,8 @@
       aiDiv.innerText = data.reply;
     } catch (err) {
       aiDiv.innerText = " AI connection failed";
-      console.error(err);
+      const data = await res.json(); 
+
     }
   }
 
@@ -191,4 +192,5 @@
   }
 </script>
 </body>
+
 </html>
