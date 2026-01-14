@@ -6,38 +6,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log("📩 Received:", req.body.message);
-
     const groq = new Groq({
       apiKey: process.env.GROQ_API_KEY,
     });
+
+    const userMessage = req.body?.message || "";
 
     const completion = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",
-          content: `
-You are "Paw-Doctor AI," an Expert Canine Health Consultant.
-
-Rules:
-- You help only with dog health, nutrition, and behavior
-- Give calm, science-backed advice
-- Ask 1–2 follow-up questions when symptoms are mentioned
-- NEVER give a diagnosis
-- If symptoms are serious, strongly suggest visiting a veterinarian
-
-Mandatory Disclaimer:
-"🐾 Note: I am an AI, not a veterinarian. This information is for educational purposes only. Please consult a local vet for a clinical diagnosis."
-
-Emergency Trigger:
-If the user mentions bloat, seizure, poison, unconscious, blue gums, or not breathing:
-RESPOND IN **BOLD CAPITAL LETTERS** TELLING THEM TO GO TO AN EMERGENCY VET IMMEDIATELY.
-`
+          content:
+            "You are Paw-Doctor AI, a kind canine health assistant. Always be calm, friendly, and give dog-care advice with a safety disclaimer."
         },
         {
           role: "user",
-          content: req.body.message
+          content: userMessage
         }
       ],
       temperature: 0.7,
@@ -46,10 +31,13 @@ RESPOND IN **BOLD CAPITAL LETTERS** TELLING THEM TO GO TO AN EMERGENCY VET IMMED
 
     const reply = completion.choices[0].message.content;
 
-    res.status(200).json({ reply });
+    return res.status(200).json({ reply });
 
   } catch (err) {
-    console.error("❌ Groq error:", err);
-    res.status(500).json({ error: "AI error" });
+    console.error("Groq error:", err);
+    return res.status(500).json({
+      error: "AI failed",
+      details: err.message
+    });
   }
 }
