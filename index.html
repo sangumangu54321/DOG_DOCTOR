@@ -133,11 +133,12 @@
     chat.appendChild(aiDiv);
 
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userText })
-      });
+      const res = await fetch(API_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ message: userText })
+});
+
 
       const data = await res.json();
       aiDiv.innerText = data.reply;
@@ -194,3 +195,4 @@
 </body>
 
 </html>
+
