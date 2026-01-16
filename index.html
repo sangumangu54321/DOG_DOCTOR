@@ -133,7 +133,7 @@
     chat.appendChild(aiDiv);
 
     try {
-      const res = await fetch(API_URL, {
+      const res = await fetch("https://dog-doctor.onrender.com/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ message: userText })
@@ -174,7 +174,7 @@
     chat.appendChild(aiDiv);
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch("https://dog-doctor.onrender.com/chat", {
 
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -195,4 +195,5 @@
 </body>
 
 </html>
+
 
