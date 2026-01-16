@@ -29,7 +29,7 @@ app.post("/chat", async (req, res) => {
     }
 
     const completion = await groq.chat.completions.create({
-      model: "llama3-70b-8192",
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",
@@ -71,3 +71,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("🚀 Backend running on port", PORT);
 });
+
